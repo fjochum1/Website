@@ -1,0 +1,147 @@
+@font-face {
+  font-family: "Oswald";
+  src: url("../fonts/Oswald-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "NotoSans";
+  src: url("../fonts/NotoSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "NotoSans2";
+  src: url("../fonts/NotoSans-Bold.ttf") format("truetype");
+}
+
+body{
+    font-family:"NotoSans";
+    background:#f5f5f5;
+    margin: 0px;
+}
+
+
+h1 {
+  color:#e9b78b;
+}
+
+h2,h3,h4{
+  font-family:"NotoSans2";
+  line-height:1.1;
+}
+
+
+a:hover,a:focus{
+  color:#8FB9A8
+}
+
+
+blockquote{
+  font-family:"NotoSans";
+  color:#414c48;
+  font-size:17px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.6em;
+  margin:20px 0 20px
+}
+
+.post-container a{
+  color:#8FB9A8
+}
+
+.post-container a:hover,.post-container a:focus{
+  color:#619b83;
+  font-weight:plain
+}
+
+.navbar-custom.is-fixed .navbar-brand:hover,.navbar-custom.is-fixed .navbar-brand:focus{
+    color:#8FB9A8;
+  }
+
+.navbar-custom.is-fixed .nav li a:hover,.navbar-custom.is-fixed .nav li a:focus{
+    color:#8FB9A8;
+  }
+  
+.navbar-custom.invert .navbar-brand:hover,.navbar-custom.invert .navbar-brand:focus{	
+    color:#619b83
+}	
+
+.navbar-custom.invert .nav li a:hover,.navbar-custom.invert .nav li a:focus{	
+    color:#619b83
+}
+  
+.post-preview>a:hover,.post-preview>a:focus{
+  text-decoration:none;
+  color:#8FB9A8;
+}
+
+.post-preview>.post-meta{
+  color:#8FB9A8;
+}
+
+.post-preview>.post-meta>a:hover,.post-preview>.post-meta>a:focus{
+  color:#8FB9A8;
+}
+
+.post-preview>a:hover,.post-preview>a:focus{
+    text-decoration:none;
+    color:#619b83
+}
+
+.post-preview>.post-meta>a:hover,.post-preview>.post-meta>a:focus{
+    color:#619b83
+}
+
+.post-content-preview:hover{
+    color:#619b83
+}
+
+footer .copyright a{
+    color:#8FB9A8
+}
+
+footer .copyright a:hover,footer .copyright a:focus{
+    color:#619b83
+}
+
+.floating-label-form-group-with-focus label{
+  color:#8FB9A8;
+}
+
+
+.btn-default:hover,.btn-default:focus{
+  background-color:#8FB9A8;
+  border:1px solid #8FB9A8;
+}
+
+
+.pager li>a:hover,.pager li>a:focus{
+  background-color:#8FB9A8;
+  border:1px solid #8FB9A8;
+}
+
+::-moz-selection{
+  background:#8FB9A8;
+}
+::selection{
+  background:#8FB9A8;
+}
+
+::selection{
+  background:#8FB9A8;
+}
+
+body{
+  webkit-tap-highlight-color:#8FB9A8;
+}
+
+#tag_cloud a:hover,#tag_cloud .tag:hover,#tag_cloud a:active,#tag_cloud .tag:active{
+  background-color:#8FB9A8!important;
+}
+
+.listing-seperator{
+  color:#8FB9A8;
+}
+
+
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ovarian cancer territorial disparities</title>
+    <link>/</link>
+    <description>Recent content on Ovarian cancer territorial disparities</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>/search/placeholder/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/search/placeholder/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About us</title>
+      <link>/top/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/top/about/</guid>
+      <description>About us  Contact RT2 lab Institut Curie 26 rue d&amp;rsquo;Ulm 75005 Paris
+Mail: jochum.floriane@gmail.com</description>
+    </item>
+    
+    <item>
+      <title>Cohort</title>
+      <link>/top/cohort/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/top/cohort/</guid>
+      <description>Content  Description Flow-chart  Description The ovarian cancer cohortwas created using data from the French social security system, which contains 95% of the population data in France. A data extraction was performed from 2016 to 2019.
+Flow-chart  </description>
+    </item>
+    
+    <item>
+      <title>Disparities analysis by region</title>
+      <link>/top/disparities/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/top/disparities/</guid>
+      <description>script src = &#34;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&#34;  $(document).ready(function() { $(&#39;body&#39;).prepend(&#39;&#39;); // onClick function for all plots (img&#39;s) $(&#39;img:not(.zoomImg)&#39;).click(function() { $(&#39;.zoomImg&#39;).attr(&#39;src&#39;, $(this).attr(&#39;src&#39;)).css({width: &#39;100%&#39;}); $(&#39;.zoomDiv&#39;).css({opacity: &#39;1&#39;, width: &#39;auto&#39;, border: &#39;1px solid white&#39;, borderRadius: &#39;5px&#39;, position: &#39;fixed&#39;, top: &#39;50%&#39;, left: &#39;50%&#39;, marginRight: &#39;-50%&#39;, transform: &#39;translate(-50%, -50%)&#39;, boxShadow: &#39;0px 0px 50px #888888&#39;, zIndex: &#39;50&#39;, overflow: &#39;auto&#39;, maxHeight: &#39;100%&#39;}); }); // onClick function for zoomImg $(&#39;img.zoomImg&#39;).click(function() { $(&#39;.zoomDiv&#39;).css({opacity: &#39;0&#39;, width: &#39;0%&#39;}); }); });  Content  Île-de-France Grand Est    Île-de-France  {&#34;</description>
+    </item>
+    
+    <item>
+      <title>Home</title>
+      <link>/top/home/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/top/home/</guid>
+      <description>The goal of this study</description>
+    </item>
+    
+  </channel>
+</rss>

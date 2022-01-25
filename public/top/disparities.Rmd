@@ -1,0 +1,552 @@
+---
+title: "Disparities analysis by region"
+image: img/Carte-France-bleu-new-new.png
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	fig.width = 8,
+	message = FALSE,
+	warning = FALSE,
+	prompt = TRUE,
+	tidy = TRUE,
+	tinytex.verbose = TRUE
+)
+```
+
+```{r load packages, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(dropR)
+library(factoextra)
+library(tableone)
+library(lubridate)
+library(stringr)
+library(ggfittext)
+library(readxl)
+library(ggsci)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+library(RColorBrewer)
+library(stringr)
+library(geojsonio)
+library(tidyr)
+library(broom)
+library(geosphere)
+library(ggplot2)
+library(dplyr)
+library(hrbrthemes)
+library(paletteer)
+library(rcartocolor)
+library(extrafont)
+library(sysfonts)
+library(markdown)
+library(ggtext)
+library(cowplot)
+library(patchwork)
+library(sf)
+library(ggnewscale)
+library(sunburstR)
+library(tidyr)
+library(plotly)
+library(echarts4r)
+library(spData)
+library(leaflet)
+library(magrittr)
+library(maps)
+library(maptools)
+library(raster)
+library(rgeos)
+library(sp)
+library(htmltools)
+library(leaflet.extras)
+library(ggnewscale)
+library(ggforce)
+library(gghalves)
+library(ggbeeswarm)
+library(tidybayes)
+library(ggdist)
+library(ggiraph)
+library(rgeos)
+```
+
+```{css zoom-lib-src, echo = FALSE}
+script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+```
+
+```{js zoom-jquery, echo = FALSE}
+ $(document).ready(function() {
+    $('body').prepend('<div class=\"zoomDiv\"><img src=\"\" class=\"zoomImg\"></div>');
+    // onClick function for all plots (img's)
+    $('img:not(.zoomImg)').click(function() {
+      $('.zoomImg').attr('src', $(this).attr('src')).css({width: '100%'});
+      $('.zoomDiv').css({opacity: '1', width: 'auto', border: '1px solid white', borderRadius: '5px', position: 'fixed', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', boxShadow: '0px 0px 50px #888888', zIndex: '50', overflow: 'auto', maxHeight: '100%'});
+    });
+    // onClick function for zoomImg
+    $('img.zoomImg').click(function() {
+      $('.zoomDiv').css({opacity: '0', width: '0%'}); 
+    });
+  });
+```
+
+---
+
+##### Content
+
+* [Île-de-France](#IDF)
+* [Grand Est](#Grandest)
+
+<p>&nbsp;</p>
+
+### Île-de-France {#IDF}
+
+```{r data IDF, include=FALSE}
+# FINESS PMSI 
+
+read.csv("/Users/florianejochum/Desktop/Thèse Curie/Disparités/PMSI/finess_geo.csv",
+         sep = ",",na.strings="") -> PMSIFINESS
+
+PMSIFINESS <- PMSIFINESS %>%
+  dplyr::select(-created_at,-updated_at) 
+
+PMSIFINESS <- PMSIFINESS %>%
+  filter(mco==1)
+
+
+### Municipalities <-> Geographic codes (PMSI ATIH)
+
+#### Load data
+read.csv('/Users/florianejochum/Desktop/Thèse Curie/Disparités/PMSI/WORK_ALL_COM_GEO_2018.csv',
+         colClasses=c("code_com"="character"),sep=";",na.strings="*")->GEOPMSI
+
+#### Rename 
+GEOPMSI <- rename(GEOPMSI,code_geo=code_codegeo)
+
+
+### Geojson 
+
+departements <- read.csv("/Users/florianejochum/Desktop/Thèse Curie/Disparités/Datagouv/departements-france.csv")
+
+spdf_communes <- geojson_read(
+  "/Users/florianejochum/Desktop/Thèse Curie/Disparités/Geojson/communes.geojson",
+  what = "sp"
+)
+
+spdf_departements <- geojson_read(
+  "/Users/florianejochum/Desktop/Thèse Curie/Disparités/Geojson/departements.geojson",
+  what = "sp"
+)
+
+spdf_regions <- geojson_read(
+  "/Users/florianejochum/Desktop/Thèse Curie/Disparités/Geojson/regions.geojson",
+  what = "sp"
+)
+
+france_regions_layer <- tidy(
+  spdf_regions[ !spdf_regions@data$code %in% c(97,98), ],
+  region="code"
+)
+
+france_departements_layer <- tidy(
+  spdf_departements[ !spdf_departements@data$code_dept %in% c(971,972,973,974,975,976,977,978,986,987,988,984,989), ],
+  region="code_dept"
+)
+
+france_communes_layer <- tidy(
+  spdf_communes[ !spdf_communes@data$code_dep %in% c(971,972,973,974,975,976,977,978,986,987,988,984,989), ],
+  region="insee"
+)
+
+
+## Care centers (FINESS)
+
+### FINESS Geolocation (etalab)
+
+#### Load data
+read.csv("/Users/florianejochum/Desktop/Thèse Curie/Disparités/FINESS data.gouv (etalab)/etalab-stock-et-historique-2004-2020/etalab_stock_et_20181231 mod.csv",
+         colClasses=c("nofinesset"="character","nofinessej"="character","codepostal"="character","categetab"="character","categretab"="character","cog"="character"),
+         sep = ";",na.strings="*") -> GEOFINESS
+
+#### Remove comma from coordx and coordy
+GEOFINESS$coordx <- gsub(",","",GEOFINESS$coordx)
+GEOFINESS$coordy <- gsub(",","",GEOFINESS$coordy)
+
+
+#### Modification of two cog 
+GEOFINESS$cog <- replace(GEOFINESS$cog,GEOFINESS$cog=="50516","50025")
+GEOFINESS$cog <- replace(GEOFINESS$cog,GEOFINESS$cog=="85166","85194")
+
+
+# PATIENTS PMSI
+
+OC_centre_debul <- read.csv2('/Users/florianejochum/Desktop/Thèse Curie/Disparités/Premier projet /Base de donnée/OC_date_first_debul_finess.csv',
+                             sep=',')
+
+# MERGE AND CLEAN
+
+OC_debul <- inner_join(OC_centre_debul,GEOFINESS,by=c('finessGeoDP'='nofinesset')) %>%
+  dplyr::select(finessGeoDP,type,V1,region,departement,coordx,coordy) %>%
+  unique %>%
+  rename('nb_centre_type'='V1') 
+  
+  
+OC_centre_tot <- OC_debul %>%
+  dplyr::filter(type=='All cohort') %>%
+  dplyr::rename('nb_centre_tot'='nb_centre_type') %>%
+  dplyr::select(finessGeoDP,nb_centre_tot) 
+
+OC_debul<- OC_debul %>%
+  inner_join(OC_centre_tot,by='finessGeoDP') %>%
+  dplyr::filter(!type=='All cohort') 
+
+OC_region<- OC_debul %>%
+  dplyr::group_by(region) %>%
+  dplyr::mutate(nb_region_tot=sum(nb_centre_type)) %>%
+  dplyr::group_by(region,type) %>%
+  dplyr::mutate(nb_region_type=sum(nb_centre_type)) %>%
+  dplyr::ungroup() %>%
+  dplyr::select(finessGeoDP,nb_region_tot,nb_region_type)
+  
+OC_dep<- OC_debul %>%
+  dplyr::group_by(departement) %>%
+  dplyr::mutate(nb_dep_tot=sum(nb_centre_type)) %>%
+  dplyr::group_by(departement,type) %>%
+  dplyr::mutate(nb_dep_type=sum(nb_centre_type)) %>%
+  dplyr::ungroup() %>%
+  dplyr::select(finessGeoDP,nb_dep_tot,nb_dep_type)
+
+OC_debul_final <- OC_debul %>%
+  inner_join(OC_region,by='finessGeoDP') %>% 
+  inner_join(OC_dep,by='finessGeoDP') %>%
+  inner_join(PMSIFINESS,by=c('finessGeoDP'='finess_geo')) %>%
+  inner_join(departements,by=c('departement'='code_departement')) %>%
+  dplyr::select(finessGeoDP,name,category_pmsi,code_commune,latitude,longitude,region,
+                departement,nom_departement,nom_region,type,nb_centre_type,nb_centre_tot,
+                nb_dep_type,nb_dep_tot,nb_region_type,nb_region_tot) %>%
+  unique() 
+
+OC_rainclound_region <- OC_debul_final %>%
+  dplyr::group_by(region) %>%
+  dplyr::mutate(
+    median=median(nb_centre_tot),
+    max=max(nb_centre_tot)
+  ) %>%
+  dplyr::ungroup()
+
+OC_rainclound_region_IDF <- OC_rainclound_region %>%
+  dplyr::mutate(IDF=case_when(
+    region==11 ~ 'Île-de-France',
+    region!=11 ~ 'Other region'
+  )) %>% 
+  dplyr::select(finessGeoDP,nb_centre_tot,IDF,category_pmsi) %>%
+  unique() %>%
+  dplyr::group_by(IDF) %>%
+  dplyr::mutate(
+    median=median(nb_centre_tot),
+    max=max(nb_centre_tot)
+  ) %>%
+  dplyr::ungroup()
+
+p_rainclound_region_IDF <-
+  OC_rainclound_region_IDF %>%
+  ggplot(aes(IDF,nb_centre_tot)) +
+  stat_interval(.width = c(.1, .25, .5, .75, 1), 
+                height = 5, show.legend = F,
+                show_point = TRUE) +
+  rcartocolor::scale_color_carto_d(palette = "Peach") + 
+  stat_halfeye(aes(IDF, nb_centre_tot), 
+                .width = 0, fill = "tan", alpha = 0.2, height = 0.7, 
+                size = 0.7, point_alpha = 1, point_color = "#590000",
+               justification=-0.2) +
+  gghalves::geom_half_point(
+    data=OC_rainclound_region_IDF %>% 
+      dplyr::filter(category_pmsi=='Privé'),
+    side = "l", 
+    range_scale = .4, 
+    alpha = .9,
+    color='#e56b6f',
+    size=2
+  ) +
+  gghalves::geom_half_point(
+    data=OC_rainclound_region_IDF %>% 
+      dplyr::filter(category_pmsi=='CH'),
+    side = "l", 
+    range_scale = .4, 
+    alpha = .9,
+    color='#355070',
+    size=2
+  ) +
+  gghalves::geom_half_point(
+    data=OC_rainclound_region_IDF %>% 
+      dplyr::filter(category_pmsi=='CHR/U'),
+    side = "l", 
+    range_scale = .4, 
+    alpha = .9,
+    color='#6d597a',
+    size=2
+  ) +
+  gghalves::geom_half_point(
+    data=OC_rainclound_region_IDF %>% 
+      dplyr::filter(category_pmsi=='CLCC'),
+    side = "l", 
+    range_scale = .4, 
+    alpha = .9,
+    color='#b56576',
+    size=2
+  ) +
+  geom_half_point(
+    data=OC_rainclound_region_IDF %>% 
+      dplyr::filter(category_pmsi=='PSPH/EBNL'),
+    side = "l", 
+    range_scale = .4, 
+    alpha = .9,
+    color='#eaac8b',
+    size=2
+  ) +
+  scale_y_continuous(limits = c(0, 300)) +
+  geom_mark_circle(data=OC_rainclound_region_IDF %>% 
+                     dplyr::filter(IDF=='Île-de-France') %>%
+                     dplyr::filter(nb_centre_tot==max(nb_centre_tot)) %>%
+                     dplyr::mutate(label='Maximum number of debulking per center = 237'), 
+                   aes(label=label),
+                   color='#8FB9A8', label.family='Arial Narrow',
+                   label.colour='#8FB9A8',con.colour = '#8FB9A8',
+                   label.fontface='bold',size=1,
+                   label.buffer = unit(10, 'mm')) +
+  geom_mark_circle(data=OC_rainclound_region_IDF %>% 
+                     dplyr::filter(IDF!='Île-de-France') %>%
+                     dplyr::filter(nb_centre_tot==max(nb_centre_tot)) %>%
+                     dplyr::mutate(label='Maximum number of debulking per center = 236'), 
+                   aes(label=label),
+                   color="grey65", label.family='Arial Narrow',
+                   label.colour="grey65",con.colour = "grey65",
+                   size=1, 
+                   label.buffer = unit(10, 'mm')) +
+  geom_text(aes(y=median, label=format(round(median,1), nsmall=1)),
+            stat="unique",
+            color="black",
+            family='Arial Narrow',
+            fontface='bold',
+            size=4,
+            nudge_x=0.08) +
+  labs(title= 'Distribution of number of first staging/debulking in <i style="color:#6ba28c;">Île-de-France</i> and outside',
+       x = "", y = "") +
+  theme_ipsum() +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(size = 0.1),
+        axis.text.x = element_text(size = 11, face = "bold"),
+        axis.text.y = element_text(size = 9, color = "grey65"),
+        plot.margin=margin(t=20,r=20,b=140,l=20),
+        plot.background = element_rect(fill='#f5f5f5',color='#f5f5f5'),
+        plot.title = ggtext::element_markdown()) 
+
+legend_text <- 
+  tibble(
+    xt = c(5, 4.125, 3.125, 1.875, 0.625, 7.5),
+    yt = rep(1.02, 6),
+    text = c("10%", "25%", "50%", "75%", "100%", "of first staging/debulking surgery in this range")
+  )
+
+legend1 <- ggplot(data = tibble(x = 0:10, y = rep(1, 11)), aes(x, y)) + 
+  stat_intervalh(.width = c(.1, .25, .5, .75, 1), show.legend = F) +
+  rcartocolor::scale_color_carto_d(palette = "Peach") +
+  coord_cartesian(ylim = c(0.9, 1.1)) +
+  geom_text(data = legend_text, aes(xt, yt, label = text), 
+            family='Arial Narrow',fontface='bold',color = "grey65", size = 3) +
+  theme_void()
+
+legend_text2 <- 
+  tibble(
+    x = c(1,2,3,4,5),
+    y = c(1,1,1,1,1),
+    text = c("CH", "CHR/U", "CLCC", "Private", "PSPH/EBNL")
+  )
+
+legend2 <- ggplot(data = legend_text2, aes(x, y, color=text)) + 
+  geom_point(show.legend = FALSE, size=3) +
+  geom_text(data = legend_text2, aes(x, y, label = text), 
+            family='Arial Narrow',fontface='bold',color = "grey65",
+            size = 3, nudge_x=-0.2) +
+  scale_color_manual(values=c("CH"="#355070","CHR/U"="#6d597a",
+                             "CLCC"="#b56576","Private"="#e56b6f",
+                             "PSPH/EBNL"="#eaac8b")) +
+  theme_void()
+
+p_rainclound_region_IDF_final <- ggdraw(p_rainclound_region_IDF) +
+  draw_plot(legend1, .3, -0.01, .525, .3) +
+  draw_plot(legend2, .3, -0.07, .525, .3) 
+
+
+OC_rainclound_region$category_pmsi <- factor(OC_rainclound_region$category_pmsi,
+                                       levels=c('CH','CHR/U','CLCC','Privé','PSPH/EBNL'),
+                                       labels=c('CH','CHR/U','CLCC','Private','PSPH/EBNL'))
+
+OC_ranking_IDF <- OC_rainclound_region %>%
+  dplyr::filter(region==11)%>% 
+  dplyr::select(finessGeoDP,name,nb_centre_tot,category_pmsi)%>%
+  unique() %>%
+  dplyr::mutate(
+    tooltip_text = paste0(toupper(name), "\n", 
+                          category_pmsi, "\n", 
+                          nb_centre_tot, " patients"))
+
+OC_ranking_IDF$name[OC_ranking_IDF$name=="HÔPITAL PRIVÉ PAUL D'EGINE"] <- "HÔPITAL PRIVÉ PAUL D EGINE"
+OC_ranking_IDF$name[OC_ranking_IDF$name=="HÔPITAL D'INSTRUCTION DES ARMÉES BEGIN"] <- "HÔPITAL D INSTRUCTION DES ARMÉES BEGIN"
+
+p_ranking_IDF <- ggplot(OC_ranking_IDF, 
+                        aes(tooltip=tooltip_text,
+                            data_id=name)) +
+  geom_segment_interactive(aes(x=reorder(name, nb_centre_tot), 
+                   xend=reorder(name, nb_centre_tot), 
+                   y=0, yend=nb_centre_tot),
+           color="#8FB9A8", size = 2) +
+  geom_point_interactive(aes(x=reorder(name, nb_centre_tot), 
+                 y=nb_centre_tot),
+               color="#8FB9A8", size = 5, shape=16) +
+  theme_ipsum() +
+  theme(
+    plot.title = ggtext::element_markdown(),
+    plot.caption = ggtext::element_markdown(),
+    axis.title.x = ggtext::element_markdown(),
+    axis.title.y = ggtext::element_markdown(),
+    plot.background=element_rect(fill='#f5f5f5', color="#f5f5f5")) +
+  labs(title = 'Ranking of the centers in <i style="color:#6ba28c;">Île-de-France</i>',
+       x='',
+       y='') +
+  coord_flip()
+
+
+tooltip_css <- "background-color:transparent;font-style:bold;font-family:Futura;font-size:10px"
+
+
+IDF_region_layer <- tidy(
+  spdf_regions[spdf_regions@data$code %in% c(11), ],
+  region="code"
+)
+
+IDF_dep_layer <- tidy(
+  spdf_departements[spdf_departements@data$code_dept %in% c(75,92,93,94,95,78,77,91), ],
+  region="code_dept"
+)
+
+IDF_com_layer <- tidy(
+  spdf_communes[spdf_communes@data$code_dep %in% c(75,92,93,94,95,78,77,91), ],
+  region="com"
+)
+
+
+OC_rainclound_region$name[OC_rainclound_region$name=="HÔPITAL PRIVÉ PAUL D'EGINE"] <- "HÔPITAL PRIVÉ PAUL D EGINE"
+OC_rainclound_region$name[OC_rainclound_region$name=="HÔPITAL D'INSTRUCTION DES ARMÉES BEGIN"] <- "HÔPITAL D INSTRUCTION DES ARMÉES BEGIN"
+
+OC_map_IDF <- OC_rainclound_region %>%
+  filter(region==11)%>% 
+  dplyr::select(finessGeoDP,name,category_pmsi,nb_centre_tot,latitude,longitude)%>%
+  unique() %>%
+  mutate(
+    tooltip_text = paste0(toupper(name), "\n", 
+                          category_pmsi, "\n", 
+                          nb_centre_tot, " patients"))
+
+
+centroid_dep <- cbind.data.frame(data.frame(gCentroid(spdf_departements, byid = TRUE), id=spdf_departements@data$nom_dept))
+
+centroid_dep_IDF <- centroid_dep %>%
+  dplyr::filter(id %in% c('YVELINES','ESSONNE',"VAL-D'OISE","SEINE-ET-MARNE"))
+  
+map_IDF <- ggplot() +
+  geom_polygon(data=IDF_com_layer,
+              aes(x=long, 
+                  y=lat,
+                  group=group),
+              color='#e8e8e8',
+              fill='white')+
+  geom_polygon(data=IDF_dep_layer,
+               aes(x=long, 
+                   y=lat,
+                   group=group),
+               color='#cecece',
+               fill=NA,
+               size=0.7) +
+  geom_polygon(data=IDF_region_layer,
+               aes(x=long, 
+                   y=lat,
+                   group=group),
+               color='#cecece',
+               fill=NA,
+               size=4) +
+  geom_polygon(data=IDF_region_layer,
+               aes(x=long, 
+                   y=lat,
+                   group=group),
+               color='white',
+               fill=NA,
+               size=1) +
+  geom_point_interactive(data=OC_map_IDF ,
+               aes(x=longitude, 
+                   y=latitude,
+                   size=nb_centre_tot,
+                   color=category_pmsi,
+                   data_id=name,
+                   tooltip=tooltip_text),
+               shape=16, alpha=0.8) +
+  geom_text(data = centroid_dep_IDF,
+            mapping = aes(
+              x = x,
+              y = y,
+              label = id),
+            size=5,
+            color='#8FB9A8',
+            family="Futura",
+            fontface="bold",
+            alpha=0.5) +
+  scale_color_manual(values=c("CH"="#355070","CHR/U"="#6d597a",
+                              "CLCC"="#b56576","Private"="#e56b6f",
+                              "PSPH/EBNL"="#eaac8b")) +
+  theme_void() +
+  theme(legend.text = element_text(size = 10, hjust = 0,
+                                   color = "grey20",family = "Arial Narrow"),
+        legend.title = element_text(size = 14, hjust = 0,
+                                    color = "grey20",family = "Arial Narrow"),
+        legend.box.background = element_rect(color="#f5f5f5", fill="#f5f5f5"),
+        legend.box.margin = margin(6, 6, 6, 6),
+        legend.position="bottom",
+        plot.title = ggtext::element_markdown(),
+        plot.background = element_rect(fill="#f5f5f5",color="#f5f5f5"),
+        panel.background = element_rect(fill="#f5f5f5",color="#f5f5f5")) +
+  guides(size=guide_legend(title.position = "top", nrow=1),
+         color=guide_legend(title.position = "top", nrow=1, 
+                            override.aes = list(size = 2))) +
+  labs(title = 'Map of the centers in <i style="color:#6ba28c;">Île-de-France</i>',
+    color="Facility type",
+    size="Number of first staging/debulking",
+    x='',
+    y='')
+map_IDF
+
+IDF <- girafe(ggobj = map_IDF + p_ranking_IDF, 
+       width_svg = 24, height_svg = 17,
+       options=list(
+         opts_hover_inv(css = "opacity:0.1;"),
+         opts_hover(css="fill:#6ba28c;"),
+         opts_tooltip(css = tooltip_css)))
+```
+
+
+```{r girafe IDF, include= TRUE, out.width='100%'}
+IDF 
+```
+
+```{r p_rainclound_region_IDF_final, include= TRUE, fig.width=15, fig.height=11, out.width='100%'}
+p_rainclound_region_IDF_final
+```
+
+<p>&nbsp;</p>
+
+### Grand-Est {#Grandest}

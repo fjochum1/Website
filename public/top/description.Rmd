@@ -1,0 +1,104 @@
+---
+title: "Description"
+image: img/Carte-France-bleu-new-new.png
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r load packages, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(dropR)
+library(factoextra)
+library(tableone)
+library(lubridate)
+library(stringr)
+library(ggfittext)
+library(readxl)
+library(ggsci)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+library(RColorBrewer)
+library(stringr)
+library(geojsonio)
+library(tidyr)
+library(broom)
+library(geosphere)
+library(ggplot2)
+library(dplyr)
+library(hrbrthemes)
+library(paletteer)
+library(rcartocolor)
+library(extrafont)
+library(sysfonts)
+library(markdown)
+library(ggtext)
+library(cowplot)
+library(patchwork)
+library(sf)
+library(ggnewscale)
+library(sunburstR)
+library(tidyr)
+library(plotly)
+library(echarts4r)
+library(spData)
+library(leaflet)
+library(magrittr)
+library(maps)
+library(maptools)
+library(raster)
+library(rgeos)
+library(sp)
+library(htmltools)
+library(leaflet.extras)
+library(ggnewscale)
+library(ggforce)
+library(gghalves)
+library(ggbeeswarm)
+library(tidybayes)
+library(ggdist)
+library(ggiraph)
+library(rgeos)
+```
+
+```{css zoom-lib-src, echo = FALSE}
+script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+```
+
+```{js zoom-jquery, echo = FALSE}
+ $(document).ready(function() {
+    $('body').prepend('<div class=\"zoomDiv\"><img src=\"\" class=\"zoomImg\"></div>');
+    // onClick function for all plots (img's)
+    $('img:not(.zoomImg)').click(function() {
+      $('.zoomImg').attr('src', $(this).attr('src')).css({width: '100%'});
+      $('.zoomDiv').css({opacity: '1', width: 'auto', border: '1px solid white', borderRadius: '5px', position: 'fixed', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', boxShadow: '0px 0px 50px #888888', zIndex: '50', overflow: 'auto', maxHeight: '100%'});
+    });
+    // onClick function for zoomImg
+    $('img.zoomImg').click(function() {
+      $('.zoomDiv').css({opacity: '0', width: '0%'}); 
+    });
+  });
+```
+
+---
+
+##### Content
+
+* [Number of cases](#nbcas)
+* [Patient age](#Grandest)
+* [Diagnosis acts](#diag)
+  - [Borderline](#diagborder)
+  - [Ovarian cancer without chemotherapy](#diagnochemo)
+  - [Ovarian cancer with chemotherapy](#diagchemo)
+* [Care pathway](#pathway)
+  - [Borderline](#diagborder)
+  - [Ovarian cancer without chemotherapy](#diagnochemo)
+  - [Ovarian cancer with chemotherapy](#diagchemo)
+
+<p>&nbsp;</p>
+
+## Number of cases {#nbcas}
+
