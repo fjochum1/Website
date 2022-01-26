@@ -8,7 +8,6 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	echo = FALSE,
-	fig.width = 8,
 	message = FALSE,
 	warning = FALSE,
 	prompt = TRUE,
@@ -74,35 +73,17 @@ library(tidybayes)
 library(ggdist)
 library(ggiraph)
 library(rgeos)
+dplyr::select
 ```
 
-```{css zoom-lib-src, echo = FALSE}
-script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
-```
+--- 
 
-```{js zoom-jquery, echo = FALSE}
- $(document).ready(function() {
-    $('body').prepend('<div class=\"zoomDiv\"><img src=\"\" class=\"zoomImg\"></div>');
-    // onClick function for all plots (img's)
-    $('img:not(.zoomImg)').click(function() {
-      $('.zoomImg').attr('src', $(this).attr('src')).css({width: '100%'});
-      $('.zoomDiv').css({opacity: '1', width: 'auto', border: '1px solid white', borderRadius: '5px', position: 'fixed', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', boxShadow: '0px 0px 50px #888888', zIndex: '50', overflow: 'auto', maxHeight: '100%'});
-    });
-    // onClick function for zoomImg
-    $('img.zoomImg').click(function() {
-      $('.zoomDiv').css({opacity: '0', width: '0%'}); 
-    });
-  });
-```
-
----
-
-##### Content
+##### Content 
 
 * [Île-de-France](#IDF)
 * [Grand Est](#Grandest)
 
-<p>&nbsp;</p>
+---
 
 ### Île-de-France {#IDF}
 
@@ -164,6 +145,7 @@ france_communes_layer <- tidy(
 )
 
 
+
 ## Care centers (FINESS)
 
 ### FINESS Geolocation (etalab)
@@ -186,14 +168,15 @@ GEOFINESS$cog <- replace(GEOFINESS$cog,GEOFINESS$cog=="85166","85194")
 # PATIENTS PMSI
 
 OC_centre_debul <- read.csv2('/Users/florianejochum/Desktop/Thèse Curie/Disparités/Premier projet /Base de donnée/OC_date_first_debul_finess.csv',
-                             sep=',')
+                            sep=',')
+
 
 # MERGE AND CLEAN
 
 OC_debul <- inner_join(OC_centre_debul,GEOFINESS,by=c('finessGeoDP'='nofinesset')) %>%
   dplyr::select(finessGeoDP,type,V1,region,departement,coordx,coordy) %>%
   unique %>%
-  rename('nb_centre_type'='V1') 
+  dplyr::rename('nb_centre_type'='V1') 
   
   
 OC_centre_tot <- OC_debul %>%
@@ -252,6 +235,7 @@ OC_rainclound_region_IDF <- OC_rainclound_region %>%
     max=max(nb_centre_tot)
   ) %>%
   dplyr::ungroup()
+
 
 p_rainclound_region_IDF <-
   OC_rainclound_region_IDF %>%
@@ -335,8 +319,7 @@ p_rainclound_region_IDF <-
             fontface='bold',
             size=4,
             nudge_x=0.08) +
-  labs(title= 'Distribution of number of first staging/debulking in <i style="color:#6ba28c;">Île-de-France</i> and outside',
-       x = "", y = "") +
+  labs(x = "", y = "") +
   theme_ipsum() +
   theme(panel.grid.minor = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -344,8 +327,7 @@ p_rainclound_region_IDF <-
         axis.text.x = element_text(size = 11, face = "bold"),
         axis.text.y = element_text(size = 9, color = "grey65"),
         plot.margin=margin(t=20,r=20,b=140,l=20),
-        plot.background = element_rect(fill='#f5f5f5',color='#f5f5f5'),
-        plot.title = ggtext::element_markdown()) 
+        plot.background = element_rect(fill='#f5f5f5')) 
 
 legend_text <- 
   tibble(
@@ -416,14 +398,19 @@ p_ranking_IDF <- ggplot(OC_ranking_IDF,
     plot.caption = ggtext::element_markdown(),
     axis.title.x = ggtext::element_markdown(),
     axis.title.y = ggtext::element_markdown(),
-    plot.background=element_rect(fill='#f5f5f5', color="#f5f5f5")) +
-  labs(title = 'Ranking of the centers in <i style="color:#6ba28c;">Île-de-France</i>',
-       x='',
-       y='') +
+    plot.background=element_rect(fill='#f5f5f5', color=NA)) +
+  labs(title = 'Ranking of the centers in <i style="color:#6ba28c;">Île-de-France</i>')+
+  ylab("") +
+  xlab("") +
   coord_flip()
 
-
 tooltip_css <- "background-color:transparent;font-style:bold;font-family:Futura;font-size:10px"
+
+girafe(ggobj = p_ranking_IDF,  width_svg = 9, height_svg = 10,
+       options=list(
+         opts_hover_inv(css = "opacity:0.1;"),
+         opts_hover(css="fill:#6ba28c;"),
+         opts_tooltip(css = tooltip_css)))
 
 
 IDF_region_layer <- tidy(
@@ -446,10 +433,10 @@ OC_rainclound_region$name[OC_rainclound_region$name=="HÔPITAL PRIVÉ PAUL D'EGI
 OC_rainclound_region$name[OC_rainclound_region$name=="HÔPITAL D'INSTRUCTION DES ARMÉES BEGIN"] <- "HÔPITAL D INSTRUCTION DES ARMÉES BEGIN"
 
 OC_map_IDF <- OC_rainclound_region %>%
-  filter(region==11)%>% 
+  dplyr::filter(region==11)%>% 
   dplyr::select(finessGeoDP,name,category_pmsi,nb_centre_tot,latitude,longitude)%>%
   unique() %>%
-  mutate(
+  dplyr::mutate(
     tooltip_text = paste0(toupper(name), "\n", 
                           category_pmsi, "\n", 
                           nb_centre_tot, " patients"))
@@ -514,39 +501,28 @@ map_IDF <- ggplot() +
                                    color = "grey20",family = "Arial Narrow"),
         legend.title = element_text(size = 14, hjust = 0,
                                     color = "grey20",family = "Arial Narrow"),
-        legend.box.background = element_rect(color="#f5f5f5", fill="#f5f5f5"),
-        legend.box.margin = margin(6, 6, 6, 6),
-        legend.position="bottom",
-        plot.title = ggtext::element_markdown(),
-        plot.background = element_rect(fill="#f5f5f5",color="#f5f5f5"),
-        panel.background = element_rect(fill="#f5f5f5",color="#f5f5f5")) +
+        plot.background = element_rect(fill="#f5f5f5",color="transparent")) +
   guides(size=guide_legend(title.position = "top", nrow=1),
          color=guide_legend(title.position = "top", nrow=1, 
                             override.aes = list(size = 2))) +
-  labs(title = 'Map of the centers in <i style="color:#6ba28c;">Île-de-France</i>',
+  labs(#title="Location of care centers in France, compared with population density",
+    #subtitle="Largest care centers are located in dense urban areas",
     color="Facility type",
     size="Number of first staging/debulking",
     x='',
     y='')
 map_IDF
 
-IDF <- girafe(ggobj = map_IDF + p_ranking_IDF, 
-       width_svg = 24, height_svg = 17,
+girafe(ggobj = map_IDF)
+
+IDF <- girafe(ggobj = map_IDF / p_ranking_IDF, 
+       width_svg = 18, height_svg = 15,
        options=list(
          opts_hover_inv(css = "opacity:0.1;"),
          opts_hover(css="fill:#6ba28c;"),
          opts_tooltip(css = tooltip_css)))
 ```
 
-
-```{r girafe IDF, include= TRUE, out.width='100%'}
-IDF 
+```{r girafe IDF, include= TRUE}
+IDF
 ```
-
-```{r p_rainclound_region_IDF_final, include= TRUE, fig.width=15, fig.height=11, out.width='100%'}
-p_rainclound_region_IDF_final
-```
-
-<p>&nbsp;</p>
-
-### Grand-Est {#Grandest}

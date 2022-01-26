@@ -35,7 +35,7 @@ h1 {
 }
 
 h2 {
-  font-family:"SedgwickAve-Regular";
+  font-family:"NotoSans2";
   color:grey;
   line-height:1.1;
 }
@@ -54,6 +54,12 @@ h4 {
 h5 { 
   color:#000000;
   font-family:"NotoSans2";
+}
+
+h6 { 
+  color:black;
+  font-family:"Arial Narrow";
+  size:12px
 }
 
 a:hover,a:focus{
@@ -173,4 +179,6 @@ img {
   object-fit: cover;
 }
 
-
+.graph {
+  margin: 0;
+}

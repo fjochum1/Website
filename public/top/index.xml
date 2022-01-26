@@ -22,8 +22,8 @@ Mail: jochum.floriane@gmail.com</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/top/cohort/</guid>
-      <description>Content  Description Flow-chart  Description The ovarian cancer cohortwas created using data from the French social security system, which contains 95% of the population data in France. A data extraction was performed from 2016 to 2019.
-Flow-chart  </description>
+      <description>Content  Description Flow-chart   Description The ovarian cancer cohortwas created using data from the French social security system, which contains 95% of the population data in France. A data extraction was performed from 2016 to 2019.
+ Flow-chart  </description>
     </item>
     
     <item>
@@ -32,7 +32,7 @@ Flow-chart  </description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/top/description/</guid>
-      <description>  script src = &#34;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&#34;  $(document).ready(function() { $(&#39;body&#39;).prepend(&#39;&#39;); // onClick function for all plots (img&#39;s) $(&#39;img:not(.zoomImg)&#39;).click(function() { $(&#39;.zoomImg&#39;).attr(&#39;src&#39;, $(this).attr(&#39;src&#39;)).css({width: &#39;100%&#39;}); $(&#39;.zoomDiv&#39;).css({opacity: &#39;1&#39;, width: &#39;auto&#39;, border: &#39;1px solid white&#39;, borderRadius: &#39;5px&#39;, position: &#39;fixed&#39;, top: &#39;50%&#39;, left: &#39;50%&#39;, marginRight: &#39;-50%&#39;, transform: &#39;translate(-50%, -50%)&#39;, boxShadow: &#39;0px 0px 50px #888888&#39;, zIndex: &#39;50&#39;, overflow: &#39;auto&#39;, maxHeight: &#39;100%&#39;}); }); // onClick function for zoomImg $(&#39;img.zoomImg&#39;).click(function() { $(&#39;.zoomDiv&#39;).css({opacity: &#39;0&#39;, width: &#39;0%&#39;}); }); });  Content  Number of cases Patient age Diagnosis acts  Borderline Ovarian cancer without chemotherapy Ovarian cancer with chemotherapy  Care pathway  Borderline Ovarian cancer without chemotherapy Ovarian cancer with chemotherapy     Number of cases  </description>
+      <description>Content  Number of cases  Count Percent  Patient age Diagnosis acts  Borderline Ovarian cancer without chemotherapy Ovarian cancer with chemotherapy  Care pathway  Borderline Ovarian cancer without chemotherapy Ovarian cancer with chemotherapy    Number of cases Count  {&#34;x&#34;:{&#34;theme&#34;:&#34;&#34;,&#34;tl&#34;:false,&#34;draw&#34;:true,&#34;renderer&#34;:&#34;canvas&#34;,&#34;events&#34;:[],&#34;buttons&#34;:[],&#34;opts&#34;:{&#34;yAxis&#34;:[{&#34;show&#34;:true}],&#34;xAxis&#34;:[{&#34;data&#34;:[&#34;Jan 16&#34;,&#34;Feb 16&#34;,&#34;Mar 16&#34;,&#34;Apr 16&#34;,&#34;May 16&#34;,&#34;Jun 16&#34;,&#34;Jul 16&#34;,&#34;Aug 16&#34;,&#34;Sep 16&#34;,&#34;Oct 16&#34;,&#34;Nov 16&#34;,&#34;Dec 16&#34;,&#34;Jan 17&#34;,&#34;Feb 17&#34;</description>
     </item>
     
     <item>
@@ -41,7 +41,7 @@ Flow-chart  </description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/top/disparities/</guid>
-      <description>script src = &#34;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&#34;  $(document).ready(function() { $(&#39;body&#39;).prepend(&#39;&#39;); // onClick function for all plots (img&#39;s) $(&#39;img:not(.zoomImg)&#39;).click(function() { $(&#39;.zoomImg&#39;).attr(&#39;src&#39;, $(this).attr(&#39;src&#39;)).css({width: &#39;100%&#39;}); $(&#39;.zoomDiv&#39;).css({opacity: &#39;1&#39;, width: &#39;auto&#39;, border: &#39;1px solid white&#39;, borderRadius: &#39;5px&#39;, position: &#39;fixed&#39;, top: &#39;50%&#39;, left: &#39;50%&#39;, marginRight: &#39;-50%&#39;, transform: &#39;translate(-50%, -50%)&#39;, boxShadow: &#39;0px 0px 50px #888888&#39;, zIndex: &#39;50&#39;, overflow: &#39;auto&#39;, maxHeight: &#39;100%&#39;}); }); // onClick function for zoomImg $(&#39;img.zoomImg&#39;).click(function() { $(&#39;.zoomDiv&#39;).css({opacity: &#39;0&#39;, width: &#39;0%&#39;}); }); });  Content  Île-de-France Grand Est    Île-de-France  {&#34;</description>
+      <description>  Content  Île-de-France Grand Est   </description>
     </item>
     
     <item>
