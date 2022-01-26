@@ -336,7 +336,7 @@ legend_text <-
   tibble(
     xt = c(5, 4.125, 3.125, 1.875, 0.625, 7.5),
     yt = rep(1.02, 6),
-    text = c("10%", "25%", "50%", "75%", "100%", "of first staging/debulking surgery in this range")
+    text = c("median", "25%", "50%", "75%", "100%", "of first staging/debulking surgery in this range")
   )
 
 legend1 <- ggplot(data = tibble(x = 0:10, y = rep(1, 11)), aes(x, y)) + 
